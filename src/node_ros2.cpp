@@ -54,7 +54,6 @@ public:
 	rplidarROS2()
 		: Node("rplidar_ros2")
 		, driver_(nullptr)
-		, clock_(RCL_ROS_TIME)
 		, angle_compensate_multiple_(1) // it stand of angle compensate at per 1 degree
 		, frequency_(5.5)
 		, channel_type_("serial")
@@ -127,7 +126,6 @@ protected:
 		get_parameter<double>("max_distance", max_distance_);
 		get_parameter<int>("screened_begin", screened_begin_);
 		get_parameter<int>("screened_end", screened_end_);
-		
 	}
 
 	void connect_driver()
@@ -330,10 +328,10 @@ protected:
 		rplidar_response_measurement_node_hq_t nodes[360 * 8];
         size_t count = _countof(nodes);
 
-        rclcpp::Time start_scan_time = clock_.now();
+        rclcpp::Time start_scan_time = this->now();
         u_result op_result = driver_->grabScanDataHq(nodes, count); // sycnronized function
-        rclcpp::Time end_scan_time = clock_.now();
-        double scan_duration = end_scan_time.seconds() - start_scan_time.seconds();
+        rclcpp::Time end_scan_time = this->now();
+        double scan_duration = (end_scan_time - start_scan_time).seconds();
 
         if (op_result == RESULT_OK)
 		{
@@ -495,7 +493,6 @@ protected:
 	rclcpp::Service<std_srvs::srv::Empty>::SharedPtr stop_motor_server_;
 	std::unique_ptr<RPlidarDriver> driver_;
 	rclcpp::TimerBase::SharedPtr timer_;
-	rclcpp::Clock clock_;
 	int angle_compensate_multiple_;
 	
 protected:
@@ -532,3 +529,4 @@ int main(int argc, char * argv[])
 	
     return 0;
 }
+
