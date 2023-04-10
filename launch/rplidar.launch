@@ -10,7 +10,7 @@
     <param name="scan_mode" value="Standard"/>
     <param name="screened_begin" value="101"/>
     <param name="screened_end" value="259"/>
-	<param name="max_distance" value="8.0"/>
+    <param name="max_distance" value="8.0"/>
   </node>
 </launch>
 
